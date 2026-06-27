@@ -1,4 +1,5 @@
 import { AuthForm } from "../../components/AuthForm";
+import { useAuth } from "../../context/AuthContext";
 import type { AuthData } from "../../interface";
 
 export function LoginPage() {
@@ -14,12 +15,16 @@ export function LoginPage() {
           password: data.password,
         }),
       });
+      
+      const { login } = useAuth();
 
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(result.message || "Login failed");
       }
+
+      login(result.token);
 
       console.log(result);
     } catch (err) {

@@ -9,8 +9,13 @@ import mysql from 'mysql2'
 import cors from 'cors'
 import path from 'path'
 import bcrypt from 'bcryptjs'
+import dotenv from 'dotenv'
+import jwt from 'jsonwebtoken'
 
 import { fileURLToPath } from 'url'
+import { authenticateJsonToken } from './middleware/auth'
+
+dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -54,8 +59,20 @@ app.post('/api/login', async (req, res) => {
             })
         }
 
+        const token = jwt.sign(
+            {
+                id: user.id,
+                username: user.username
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: process.env.JWT_EXPIRES_IN
+            }
+        )
+
         res.status(201).json({
             message: "Login successful",
+            token,
             user: {
                 id: user.id,
                 username: user.username
@@ -94,7 +111,7 @@ app.post('/api/register', async (req, res) => {
 })
 
 //  Fetch data [user_id, task, task_date, is_completed, created_at, updated_at]
-app.get('/api/todo/:userId', async (req, res) => {
+app.get('/api/todo/:userId', authenticateJsonToken, async (req, res) => {
     try {
         const { userId } = req.params
 

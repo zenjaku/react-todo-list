@@ -1,5 +1,7 @@
 // Global Interfaces
 
+import type { ReactNode } from "react";
+
 export interface Todo {
   id: number;
   user_id: number;
@@ -21,4 +23,15 @@ export interface AuthFormProps {
   buttonText: string;
   isRegister: boolean;
   onSubmit: (data: AuthData) => void | Promise<void>;
+}
+
+export interface AuthContextType {
+  token: string | null;
+  login: (token: string) => void;
+  logout: () => void;
+}
+
+
+export interface AuthProviderProps {
+  children: ReactNode;
 }
