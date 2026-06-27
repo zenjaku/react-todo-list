@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import { Card } from "../components/Card";
 import type { Todo } from "../interface";
+import { useAuth } from "../context/AuthContext";
 
 export function TodoList() {
   const [todoList, setTodoList] = useState<Todo[]>([]);
-
-  const currentUserId = 1;
+  const { token, userId } = useAuth();
+  const currentUserId = userId;
 
   useEffect(() => {
-    fetch(`http://localhost:9000/api/todo/${currentUserId}`)
+    if (!token || !currentUserId) return;
+    fetch(`http://localhost:9000/api/todo/${currentUserId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -22,7 +28,7 @@ export function TodoList() {
       .catch((error) => {
         console.error("Failed to fetch todos: ", error);
       });
-  }, []);
+  }, [token, currentUserId]);
   return (
     <div>
       <div className="card-container">

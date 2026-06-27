@@ -13,7 +13,7 @@ import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 
 import { fileURLToPath } from 'url'
-import { authenticateJsonToken } from './middleware/auth'
+import { authenticateJsonToken } from './middleware/auth.js'
 
 dotenv.config()
 

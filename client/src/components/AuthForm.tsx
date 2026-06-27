@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { AuthFormProps } from "../interface";
 import { Link } from "react-router-dom";
 
-export function AuthForm({ title, isRegister = false, buttonText, onSubmit }: AuthFormProps) {
+export function AuthForm({ title, isRegister = false, buttonText, onSubmit, error, success }: AuthFormProps) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,9 +15,12 @@ export function AuthForm({ title, isRegister = false, buttonText, onSubmit }: Au
   return (
     <>
       <div className="auth-container">
-        <h2>{title}</h2>
-
         <form onSubmit={handleSubmit} className="auth-form">
+          <h2>{title}</h2>
+
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
+
           <input
             type="text"
             placeholder="Username"
@@ -64,7 +67,7 @@ export function AuthForm({ title, isRegister = false, buttonText, onSubmit }: Au
           ) : (
             <>
               <p>
-               Already have an account? Click{" "}
+                Already have an account? Click{" "}
                 <Link to="/" className="click-here">
                   here
                 </Link>{" "}

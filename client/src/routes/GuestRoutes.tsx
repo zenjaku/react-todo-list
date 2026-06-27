@@ -5,7 +5,7 @@ export function GuestRoutes() {
   const { token } = useAuth();
 
   if (token) {
-    return <Navigate to="/todos" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

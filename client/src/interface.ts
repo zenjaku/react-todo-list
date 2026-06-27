@@ -23,14 +23,16 @@ export interface AuthFormProps {
   buttonText: string;
   isRegister: boolean;
   onSubmit: (data: AuthData) => void | Promise<void>;
+  error: string | null;
+  success: string | null;
 }
 
 export interface AuthContextType {
   token: string | null;
-  login: (token: string) => void;
+  userId: string | null;
+  login: (token: string, userId: string) => void;
   logout: () => void;
 }
-
 
 export interface AuthProviderProps {
   children: ReactNode;

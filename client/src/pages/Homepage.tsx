@@ -1,14 +1,9 @@
-// import { TodoList } from "./TodoList";
-
-import { LoginPage } from "./auth/LoginPage";
-import { RegisterPage } from "./auth/RegisterPage";
+import { TodoList } from "./TodoList";
 
 export function Homepage() {
   return (
     <div>
-      {/* <TodoList /> */}
-      <LoginPage />
-      <RegisterPage />
+      <TodoList />
     </div>
   );
 }
