@@ -1,0 +1,113 @@
+// Old Common Js
+// const express = require('express')
+// const mysql = require('mysql2')
+// const cors = require('cors')
+// const path = require('path')
+
+import express from 'express'
+import mysql from 'mysql2'
+import cors from 'cors'
+import path from 'path'
+import bcrypt from 'bcryptjs'
+
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const app = express()
+
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(cors())
+app.use(express.json())
+
+const port = 9000
+
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "db_hades",
+    password: "12345",
+    database: "db_todo",
+    port: 3306
+}).promise()
+
+// HTTP GET Request
+// Login Request
+app.post('/api/login', async (req, res) => {
+    try {
+        const { username, password } = req.body
+
+        const [rows] = await db.query("SELECT * FROM users WHERE username = ?", [username])
+        if (rows.length === 0) {
+            return res.status(401).json({
+                message: "Invalid Credentials"
+            })
+        }
+
+        const user = rows[0]
+
+        const isMatch = await bcrypt.compare(password, user.password_hash)
+
+        if (!isMatch) {
+            return res.status(401).json({
+                message: "Invalid Credentials"
+            })
+        }
+
+        res.status(201).json({
+            message: "Login successful",
+            user: {
+                id: user.id,
+                username: user.username
+            }
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Login failed" })
+    }
+})
+
+// Register Request
+app.post('/api/register', async (req, res) => {
+    try {
+        const { username, email, password } = req.body
+        const [checkExistingUsers] = await db.query("SELECT id FROM users WHERE username = ? OR email = ?", [username, email])
+
+        if (checkExistingUsers.length > 0) {
+            return res.status(409).json({
+                message: "Username or Email Address already exists"
+            })
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const [result] = await db.query("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)", [username, email, hashedPassword])
+
+        res.status(201).json({
+            message: "Registration successful",
+            userId: result.insertId
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Registration failed" })
+    }
+})
+
+//  Fetch data [user_id, task, task_date, is_completed, created_at, updated_at]
+app.get('/api/todo/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params
+
+        const [rows] = await db.query("SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC", [userId])
+
+        res.json(rows)
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch data from todos table" })
+    }
+})
+
+
+app.listen(port, () => {
+    console.log("listening on http://localhost:" + port);
+})
