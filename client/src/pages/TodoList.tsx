@@ -7,10 +7,11 @@ export function TodoList() {
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const { token, userId } = useAuth();
   const currentUserId = userId;
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!token || !currentUserId) return;
-    fetch(`http://localhost:9000/api/todo/${currentUserId}`, {
+    fetch(`${apiUrl}/todo/${currentUserId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -35,7 +36,11 @@ export function TodoList() {
         {todoList.map((todo) => (
           <Card
             key={todo.id}
-            title={todo.title}
+            title={`${todo.title} • ${new Date(todo.task_date).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}`}
             details={todo.task}
             datetime={todo.created_at ? new Date(todo.created_at) : new Date(todo.updated_at)}
           />

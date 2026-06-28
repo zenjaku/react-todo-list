@@ -124,6 +124,26 @@ app.get('/api/todo/:userId', authenticateJsonToken, async (req, res) => {
     }
 })
 
+// Create new data
+app.post('/api/todo/create', authenticateJsonToken, async (req, res) => {
+    try {
+        const { title, task, task_date, is_completed } = req.body
+
+        const userId = req.user.id;
+
+        const [result] = await db.query("INSERT INTO todos (title, task, task_date, is_completed, user_id) VALUES (?, ?, ?, ?, ?)", [title, task, task_date, is_completed, userId])
+
+        res.status(201).json({
+            message: "Todo saved successful",
+            todoId: result.insertId
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to save todos" })
+
+    }
+})
+
 
 app.listen(port, () => {
     console.log("listening on http://localhost:" + port);

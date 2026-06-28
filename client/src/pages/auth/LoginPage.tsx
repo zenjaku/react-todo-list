@@ -9,12 +9,13 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (data: AuthData) => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch("http://localhost:9000/api/login", {
+      const response = await fetch(`${apiUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

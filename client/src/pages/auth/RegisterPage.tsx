@@ -7,12 +7,13 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleRegister = async (data: AuthData) => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await fetch("http://localhost:9000/api/register", {
+      const response = await fetch(`${apiUrl}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

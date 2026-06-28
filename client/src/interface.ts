@@ -7,7 +7,8 @@ export interface Todo {
   user_id: number;
   title: string;
   task: string;
-  is_completed: 0 | 1;
+  task_date: string;
+  is_completed: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -36,4 +37,25 @@ export interface AuthContextType {
 
 export interface AuthProviderProps {
   children: ReactNode;
+}
+
+export interface TodoData {
+  id: number;
+  user_id: number;
+  title: string;
+  task: string;
+  task_date: string;
+  is_completed: boolean;
+}
+
+export interface TodoFormProps {
+  onClose: () => void;
+  onSubmit: (data: Omit<TodoData, "id" | "user_id">) => void;
+  formTitle?: string;
+  error?: string | null;
+  success?: string | null;
+}
+
+export interface FloatingButtonProps {
+  floatingButtonClick: () => void;
 }

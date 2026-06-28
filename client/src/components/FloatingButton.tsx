@@ -1,6 +1,9 @@
-export function FloatingButton() {
-  function handleClick() {
-    alert("button clicked!");
-  }
-  return <button className="floating-btn" onClick={handleClick}> Add Note </button>;
+import type { FloatingButtonProps } from "../interface";
+
+export function FloatingButton({ floatingButtonClick }: FloatingButtonProps) {
+  return (
+    <button className="floating-btn" onClick={floatingButtonClick}>
+      Add Note
+    </button>
+  );
 }
