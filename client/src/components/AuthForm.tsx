@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AuthFormProps } from "../interface";
+import type { AuthFormProps } from "../type";
 import { Link } from "react-router-dom";
 
 export function AuthForm({ title, isRegister = false, buttonText, onSubmit, error, success }: AuthFormProps) {

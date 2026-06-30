@@ -1,4 +1,4 @@
-import type { FloatingButtonProps } from "../interface";
+import type { FloatingButtonProps } from "../type";
 
 export function FloatingButton({ floatingButtonClick }: FloatingButtonProps) {
   return (

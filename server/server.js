@@ -29,11 +29,11 @@ app.use(express.json())
 const port = 9000
 
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "db_hades",
-    password: "12345",
-    database: "db_todo",
-    port: 3306
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
 }).promise()
 
 // HTTP GET Request
@@ -111,9 +111,9 @@ app.post('/api/register', async (req, res) => {
 })
 
 //  Fetch data [user_id, task, task_date, is_completed, created_at, updated_at]
-app.get('/api/todo/:userId', authenticateJsonToken, async (req, res) => {
+app.get('/api/todo', authenticateJsonToken, async (req, res) => {
     try {
-        const { userId } = req.params
+        const userId = req.user.id;
 
         const [rows] = await db.query("SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC", [userId])
 

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AuthForm } from "../../components/AuthForm";
 import { useAuth } from "../../context/AuthContext";
-import type { AuthData } from "../../interface";
+import type { AuthData } from "../../type";
 import { useState } from "react";
 
 export function LoginPage() {

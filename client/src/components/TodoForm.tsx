@@ -1,28 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import type { TodoFormProps } from "../interface";
+import { useState } from "react";
+import type { TodoFormProps } from "../type";
 
 export function TodoForm({ onClose, formTitle, onSubmit, error, success }: TodoFormProps) {
-  const todoFormRef = useRef<HTMLDivElement>(null);
-
   const [title, setTitle] = useState("");
   const [task, setTask] = useState("");
   const [taskDate, setTaskDate] = useState("");
 
   const [isCompleted, setIsCompleted] = useState(false);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (todoFormRef.current && !todoFormRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onClose]);
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +16,7 @@ export function TodoForm({ onClose, formTitle, onSubmit, error, success }: TodoF
   return (
     <>
       <div className="modal-overlay">
-        <div ref={todoFormRef} className="modal">
+        <div className="modal">
           <div className="auth-container">
             <form onSubmit={handleSubmit} className="auth-form">
               <h2>{formTitle}</h2>
