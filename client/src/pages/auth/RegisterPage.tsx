@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthForm } from "../../components/AuthForm";
 import type { AuthData } from "../../type";
 import { useState } from "react";
+import { Notice } from "../../components/Notice";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -39,9 +40,26 @@ export function RegisterPage() {
       setError(err.message || "An unexpected error occured.");
     }
   };
+
+  const message = (
+    <>
+      <p>
+        For your security, do not reuse passwords from your bank, email, or other important accounts. Use a simple,
+        unique password for this application instead.
+      </p>
+
+      <br />
+      <p>
+        This website is a personal project and is <strong>not</strong> intended for storing sensitive information.
+        Please do not save passwords, usernames, bank account details, personal identification numbers, or any other
+        confidential information in your todos.
+      </p>
+    </>
+  );
   return (
     <>
-      <div>
+      <div className="register-page">
+        <Notice title="Warning!!!" message={message} type="warning" />
         <AuthForm
           title="Create an Account"
           buttonText="Sign up"

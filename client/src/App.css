@@ -36,15 +36,18 @@ a {
     header a {
         font-size: 1.4rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #ff3b30 0%, #a10303 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
         letter-spacing: -0.5px;
+        color: #e20000;
         transition: transform 0.2s ease;
-        display: inline-block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
 
-        &:hover {
-            transform: translateY(-1px);
+        >img {
+            width: 100%;
+            min-width: 30px;
+            max-width: 40px;
         }
     }
 
@@ -123,6 +126,7 @@ a {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1rem;
     align-items: stretch;
+    margin-top: 1.2rem;
 }
 
 .card {
@@ -207,7 +211,7 @@ a {
 .auth-form {
     width: 100%;
     min-width: 330px;
-    max-width: 700px;
+    max-width: 500px;
 
     display: flex;
     flex-direction: column;
@@ -217,7 +221,7 @@ a {
 
     background: #fff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
+    border-radius: 3px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -228,7 +232,7 @@ a {
     padding: 0.75rem 1rem;
 
     border: 1px solid #d1d5db;
-    border-radius: 8px;
+    border-radius: 3px;
 
     font-size: 1rem;
     font-family: inherit;
@@ -254,13 +258,18 @@ a {
     line-height: 1.5;
 }
 
-.auth-form button {
+
+.auth-form .click-here {
+    color: #cb0000;
+}
+
+.submit-btn {
     width: 100%;
 
     padding: 0.85rem;
 
     border: none;
-    border-radius: 8px;
+    border-radius: 3px;
 
     background: #cb0000;
     color: #fff;
@@ -280,9 +289,36 @@ a {
     }
 }
 
-.auth-form .click-here {
-    color: #cb0000;
+
+.cancel-btn {
+    width: 100%;
+
+    padding: 0.85rem;
+
+    border: none;
+    border-radius: 3px;
+
+    background: #a4a4a4;
+    color: #fff;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background: #8b8a8a;
+    }
+
+    &::active {
+        transform: translateY(1px);
+    }
 }
+
+/* .logout-btn {
+
+} */
 
 .error-message {
     width: 100%;
@@ -375,12 +411,26 @@ a {
             }
 
             button {
-                color: #e02424;
-                border-top: 1px solid rgba(229, 231, 235, 0.5);
+                margin-top: 1.2rem;
+                width: 100%;
+                border: none;
+
+                background: #cb0000;
+                color: #fff;
+
+                font-size: .85rem;
+                font-weight: 600;
+
+                cursor: pointer;
+                transition: background-color 0.2s ease;
 
                 &:hover {
-                    background-color: #fde8e8;
-                    color: #e02424;
+                    background: #a10303;
+                    color: #c4c4c4;
+                }
+
+                &::active {
+                    transform: translateY(1px);
                 }
             }
         }
@@ -405,4 +455,76 @@ a {
     border-radius: 10px;
     /* min-width: 600px; */
     width: 100%
+}
+
+.notice {
+    width: 100%;
+    min-width: 200px;
+    max-width: 400px;
+
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border-left: 5px solid;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+}
+
+.notice-info {
+    border-left-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.notice-success {
+    border-left-color: #22c55e;
+    background: #f0fdf4;
+}
+
+.notice-warning {
+    border-left-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.notice-error {
+    border-left-color: #ef4444;
+    background: #fef2f2;
+}
+
+
+.notice-title-info {
+    color: #3b82f6;
+    text-transform: uppercase;
+    font-size: 1.75rem;
+}
+
+.notice-title-success {
+    color: #22c55e;
+    text-transform: uppercase;
+    font-size: 1.75rem;
+}
+
+.notice-title-warning {
+    color: #f59e0b;
+    text-transform: uppercase;
+    font-size: 1.75rem;
+}
+
+.notice-title-error {
+    color: #ef4444;
+    text-transform: uppercase;
+    font-size: 1.75rem;
+}
+
+.login-page,
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 760px) {
+
+    .login-page,
+    .register-page {
+        flex-direction: column;
+    }
 }

@@ -52,7 +52,7 @@ export function AuthForm({ title, isRegister = false, buttonText, onSubmit, erro
             className="auth-input"
             required
           />
-          <button type="submit">{buttonText}</button>
+          <button type="submit" className="submit-btn">{buttonText}</button>
 
           {!isRegister ? (
             <>

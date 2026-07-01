@@ -64,9 +64,9 @@ export function TodoForm({ onClose, formTitle, onSubmit, error, success }: TodoF
                 Completed
               </label>
 
-              <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-                <button type="submit">Save Todo</button>
-                <button type="button" onClick={onClose} style={{ backgroundColor: "gray" }}>
+              <div className="todo-form-btns" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                <button type="submit" className="submit-btn">Save Todo</button>
+                <button type="button" className="cancel-btn" onClick={onClose}>
                   Cancel
                 </button>
               </div>

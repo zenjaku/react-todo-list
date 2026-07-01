@@ -73,3 +73,9 @@ export type CardProps = {
 export type CreatePageProps = {
   onClose: () => void;
 };
+
+export type NoticeProps = {
+  title: string;
+  message: ReactNode;
+  type: "info" | "success" | "warning" | "error";
+};

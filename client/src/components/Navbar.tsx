@@ -1,6 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useRef, useState } from "react";
+import navLogo from '../assets/logo.png'
 
 export function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
@@ -31,7 +32,9 @@ export function Navbar() {
     <>
       <div className="navigation">
         <header>
-          <Link to="/">Todo List</Link>
+          <Link to="/">
+            <img src={navLogo} alt="" /> Todo List
+          </Link>
         </header>
         <nav className="nav-list">
           <ul>
@@ -55,7 +58,7 @@ export function Navbar() {
                       <NavLink to="/help">Help</NavLink>
                     </li>
                     <li>
-                      <button onClick={handleLogout}>Logout</button>
+                      <button onClick={handleLogout} className="logout-btn">Logout</button>
                     </li>
                   </ul>
                 )}

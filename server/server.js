@@ -28,12 +28,13 @@ app.use(express.json())
 
 const port = 9000
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT
+    port: process.env.DB_PORT,
+    connectionLimit: process.env.DB_CONNECTION_POOL_LIMIT
 }).promise()
 
 // HTTP GET Request
@@ -145,6 +146,28 @@ app.post('/api/todo/create', authenticateJsonToken, async (req, res) => {
 })
 
 
-app.listen(port, () => {
-    console.log("listening on http://localhost:" + port);
-})
+// app.listen(port, () => {
+//     console.log("listening on http://localhost:" + port);
+// })
+
+async function dbServer() {
+    try {
+        await db.query("SELECT 1")
+
+        console.table({
+            Server: `http://localhost:${port}`,
+            Database: "Connected!",
+            Environment: process.env.NODE_ENV ?? "development"
+        })
+
+        app.listen(port)
+    } catch (error) {
+        console.table({
+            Database: "Disconnected!",
+            Error: err.message
+        })
+        process.exit(1);
+    }
+}
+
+dbServer()
