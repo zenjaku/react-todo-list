@@ -1,8 +1,8 @@
 import type { CardProps } from "../type";
 
-export function Card({ title, details, datetime }: CardProps) {
+export function Card({ title, details, datetime, onClick }: CardProps) {
   return (
-    <div className="card">
+    <div className="card" onClick={onClick}>
       <div className="card-header">
         <h3>{title}</h3>
       </div>

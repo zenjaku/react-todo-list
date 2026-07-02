@@ -68,6 +68,7 @@ export type CardProps = {
   title: string;
   details: string;
   datetime: Date;
+  onClick: () => void;
 };
 
 export type CreatePageProps = {
@@ -78,4 +79,33 @@ export type NoticeProps = {
   title: string;
   message: ReactNode;
   type: "info" | "success" | "warning" | "error";
+};
+
+export type ViewPageData = {
+  id: number;
+  title: string;
+  task: string;
+  task_date: string;
+  is_completed: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ViewPageProps = {
+  onClose: () => void;
+  todoId: number;
+};
+
+export type UpdatePageData = {
+  id?: number;
+  user_id?: number;
+  title?: string;
+  task?: string;
+  task_date?: string;
+  is_completed?: boolean;
+};
+
+export type UpdatePageProps = {
+  onClose: () => void;
+  onUpdate: (data: Omit<UpdatePageData, "id" | "user_id">) => void;
 };

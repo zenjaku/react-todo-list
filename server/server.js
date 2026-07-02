@@ -37,7 +37,8 @@ const db = mysql.createPool({
     connectionLimit: process.env.DB_CONNECTION_POOL_LIMIT
 }).promise()
 
-// HTTP GET Request
+// HTTP Requests - API's
+
 // Login Request
 app.post('/api/login', async (req, res) => {
     try {
@@ -111,7 +112,7 @@ app.post('/api/register', async (req, res) => {
     }
 })
 
-//  Fetch data [user_id, task, task_date, is_completed, created_at, updated_at]
+//  Fetch data list [user_id, task, task_date, is_completed, created_at, updated_at]
 app.get('/api/todo', authenticateJsonToken, async (req, res) => {
     try {
         const userId = req.user.id;
@@ -119,6 +120,31 @@ app.get('/api/todo', authenticateJsonToken, async (req, res) => {
         const [rows] = await db.query("SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC", [userId])
 
         res.json(rows)
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch data from todos table" })
+    }
+})
+
+// view specific data
+app.get('/api/todo/:id', authenticateJsonToken, async (req, res) => {
+    try {
+        const { id } = req.params
+        const userId = req.user.id;
+
+        const [result] = await db.query("SELECT id, title, task, task_date, is_completed, created_at, updated_at FROM todos WHERE id =? AND user_id = ?", [id, userId])
+
+        if (result.length === 0) {
+            return res.status(400).json({
+                message: "No record found"
+            })
+        }
+
+        return res.status(200).json({
+            message: "Record found",
+            todo: result[0]
+        })
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Failed to fetch data from todos table" })
@@ -145,11 +171,50 @@ app.post('/api/todo/create', authenticateJsonToken, async (req, res) => {
     }
 })
 
+// update data
+app.patch('/api/todo/update/:id', authenticateJsonToken, async (req, res) => {
+    try {
+        const { id } = req.params
+        const userId = req.user.id
 
-// app.listen(port, () => {
-//     console.log("listening on http://localhost:" + port);
-// })
+        const updates = []
+        const values = []
 
+        for (const [key, value] of Object.entries(req.body)) {
+            updates.push(`${key} = ?`)
+            values.push(value)
+        }
+
+        if (updates.length === 0) {
+            return res.status(400).json({
+                message: "No record found."
+            })
+        }
+
+        values.push(id, userId)
+
+        const [result] = await db.query(`UPDATE todos SET ${updates.join(", ")} WHERE id = ? AND user_id = ?`, values)
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "No records found"
+            })
+        }
+
+        res.status(201).json({
+            message: "Todo updated successful",
+        })
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to update todo: ", id })
+    }
+})
+
+
+
+
+// console logs
 async function dbServer() {
     try {
         await db.query("SELECT 1")
