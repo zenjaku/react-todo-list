@@ -15,6 +15,7 @@ import jwt from 'jsonwebtoken'
 import { fileURLToPath } from 'url'
 import { authenticateJsonToken } from './middleware/auth.js'
 import { rateLimit } from 'express-rate-limit'
+import fs from 'fs'
 
 dotenv.config()
 
@@ -41,13 +42,20 @@ app.use('/api/', limiter)
 
 const port = 1000
 
+// Determine if database SSL certificate is present
+const caCertPath = path.join(__dirname, 'isrgrootx1.pem')
+const sslConfig = fs.existsSync(caCertPath)
+    ? { ca: fs.readFileSync(caCertPath) }
+    : undefined
+
 const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
-    connectionLimit: process.env.DB_CONNECTION_POOL_LIMIT
+    connectionLimit: process.env.DB_CONNECTION_POOL_LIMIT,
+    ssl: sslConfig
 }).promise()
 
 // HTTP Requests - API's
