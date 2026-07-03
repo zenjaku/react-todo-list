@@ -17,18 +17,18 @@ export function AboutPage() {
         <tbody>
           <tr>
             <td>Name:</td>
-            <td>Renzo Tomarao (Zenjaku)</td>
+            <td>Renzo Tomarao</td>
           </tr>
           <tr>
             <td>Website:</td>
             <td>
-              <a href="https://github.com/zenjaku" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline" }}>
-                github.com/zenjaku
+              <a href="https://www.zcreations.xyz" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "underline" }}>
+                www.zcreations.xyz
               </a>
             </td>
           </tr>
           <tr>
-            <td>System Born:</td>
+            <td>System:</td>
             <td>July 2026</td>
           </tr>
         </tbody>
