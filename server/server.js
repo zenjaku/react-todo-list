@@ -381,14 +381,20 @@ async function dbServer() {
             Environment: process.env.NODE_ENV ?? "development"
         })
 
-        app.listen(port)
+        if (!process.env.VERCEL) {
+            app.listen(port)
+        }
     } catch (error) {
         console.table({
             Database: "Disconnected!",
-            Error: err.message
+            Error: error.message
         })
-        process.exit(1);
+        if (!process.env.VERCEL) {
+            process.exit(1);
+        }
     }
 }
 
 dbServer()
+
+export default app
