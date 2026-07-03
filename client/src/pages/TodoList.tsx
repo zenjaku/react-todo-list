@@ -39,42 +39,42 @@ export function TodoList({ refreshTrigger }: TodoListProps) {
     fetchTodos();
   }, [token, refreshTrigger]);
 
-
-
   return (
     <div>
       <div className="card-container">
-        {todoList.map((todo) => {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const [year, month, day] = todo.task_date.split("-").map(Number);
-          const taskDateLocal = new Date(year, month - 1, day);
-          const isOverdue = !todo.is_completed && taskDateLocal < today;
+        {todoList.length === 0 ? (
+          <p className="no-data">Your notepad is empty! Click the button in the corner to add your first task.</p>
+        ) : (
+          todoList.map((todo) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-          return (
-            <Card
-              key={todo.id}
-              title={`${todo.title} • ${new Date(todo.task_date).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}`}
-              details={todo.task}
-              datetime={todo.created_at ? new Date(todo.created_at) : new Date(todo.updated_at)}
-              onClick={() => setSelectedTodo(todo.id)}
-              isCompleted={todo.is_completed}
-              isOverdue={isOverdue}
-            />
-          );
-        })}
+            const [year, month, day] = todo.task_date.split("-").map(Number);
+            const taskDateLocal = new Date(year, month - 1, day);
+
+            const isOverdue = !todo.is_completed && taskDateLocal < today;
+
+            return (
+              <Card
+                key={todo.id}
+                title={`${todo.title} • ${new Date(todo.task_date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}`}
+                details={todo.task}
+                datetime={todo.created_at ? new Date(todo.created_at) : new Date(todo.updated_at)}
+                onClick={() => setSelectedTodo(todo.id)}
+                isCompleted={todo.is_completed}
+                isOverdue={isOverdue}
+              />
+            );
+          })
+        )}
       </div>
 
       {selectedTodo !== null && (
-        <ViewPage
-          todoId={selectedTodo}
-          onClose={() => setSelectedTodo(null)}
-          onRefresh={fetchTodos}
-        />
+        <ViewPage todoId={selectedTodo} onClose={() => setSelectedTodo(null)} onRefresh={fetchTodos} />
       )}
     </div>
   );

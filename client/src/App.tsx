@@ -9,6 +9,7 @@ import { HelpPage } from "./pages/HelpPage";
 import { ProtectedRoute } from "./routes/ProtectedRoutes";
 import { AuthLayout } from "./layout/AuthLayout";
 import { Homepage } from "./pages/Homepage";
+import { ProfilePage } from "./pages/ProfilePage";
 
 function App() {
   function PageWrapper() {
@@ -30,6 +31,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<AuthLayout />}>
                 <Route path="/" element={<Homepage />} />
+                <Route path="/profile" element={<ProfilePage />} />
               </Route>
             </Route>
 

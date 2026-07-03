@@ -15,8 +15,8 @@ export function Card({ title, details, datetime, onClick, isCompleted, isOverdue
         <span>{datetime.toLocaleString()}</span>
       </div>
 
-      {isCompleted && <div className="completed-stamp">Completed</div>}
-      {isOverdue && <div className="overdue-stamp">Overdue</div>}
+      {!!isCompleted && <div className="completed-stamp">Completed</div>}
+      {!!isOverdue && <div className="overdue-stamp">Overdue</div>}
     </div>
   );
 }

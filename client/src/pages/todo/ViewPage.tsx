@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import type { ViewPageData, ViewPageProps, UpdatePageData } from "../../type";
 import { useAuth } from "../../context/AuthContext";
 import { UpdatePage } from "./UpdatePage";
+import { ConfirmModal } from "../../components/ConfirmModal";
 
 export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
   const [todo, setTodo] = useState<ViewPageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const { token } = useAuth();
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -106,10 +108,7 @@ export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
     }
   };
 
-  const handleDelete = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this task?");
-    if (!confirmDelete) return;
-
+  const executeDelete = async () => {
     try {
       const response = await fetch(`${apiUrl}/todo/delete/${todoId}`, {
         method: "DELETE",
@@ -171,7 +170,7 @@ export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
 
           <div className="view-modal-actions">
             <button className="update-btn" onClick={() => setIsUpdating(true)}>Update</button>
-            <button className="delete-btn" onClick={handleDelete}>Delete</button>
+            <button className="delete-btn" onClick={() => setShowDeleteConfirm(true)}>Delete</button>
           </div>
         </div>
       </div>
@@ -183,6 +182,14 @@ export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
           onUpdate={handleUpdate}
         />
       )}
+
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        title="Discard Task"
+        message="Are you sure you want to delete this task? This note will be lost forever!"
+        onConfirm={executeDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </>
   );
 }

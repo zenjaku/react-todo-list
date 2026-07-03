@@ -7,11 +7,13 @@ import { Notice } from "../../components/Notice";
 export function RegisterPage() {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState<string | null>(null);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleRegister = async (data: AuthData) => {
     setError(null);
+    setValidationErrors([]);
     setSuccess(null);
     try {
       const response = await fetch(`${apiUrl}/register`, {
@@ -29,7 +31,11 @@ export function RegisterPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Registration failed");
+        if (result.errors) {
+          setValidationErrors(result.errors);
+          throw new Error("Password requirements not met.");
+        }
+        throw new Error(result.message || "Registration failed.");
       }
 
       setSuccess("Welcome!");
@@ -37,7 +43,7 @@ export function RegisterPage() {
       console.log(result);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "An unexpected error occured.");
+      setError(err.message || "An unexpected error occurred.");
     }
   };
 
@@ -67,6 +73,7 @@ export function RegisterPage() {
           onSubmit={handleRegister}
           error={error}
           success={success}
+          validationErrors={validationErrors}
         />
       </div>
     </>

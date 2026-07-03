@@ -17,6 +17,7 @@ export type AuthFormProps = {
   onSubmit: (data: AuthData) => void | Promise<void>;
   error: string | null;
   success: string | null;
+  validationErrors?: string[];
 };
 
 export type AuthContextType = {

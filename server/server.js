@@ -14,6 +14,7 @@ import jwt from 'jsonwebtoken'
 
 import { fileURLToPath } from 'url'
 import { authenticateJsonToken } from './middleware/auth.js'
+import { rateLimit } from 'express-rate-limit'
 
 dotenv.config()
 
@@ -22,9 +23,21 @@ const __dirname = path.dirname(__filename)
 
 const app = express()
 
+// Dynamic CORS configuration (Vite local dev server port fallback)
+app.use(cors({
+    origin: process.env.CLIENT_URL
+}))
+
 app.use(express.static(path.join(__dirname, 'public')))
-app.use(cors())
 app.use(express.json())
+
+// Rate limiter for DDoS / brute-force protection
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 200, // Limit each IP to 200 requests per 15 minutes
+    message: { message: "Too many requests from this IP. Please try again after 15 minutes." }
+})
+app.use('/api/', limiter)
 
 const port = 1000
 
@@ -98,6 +111,29 @@ app.post('/api/register', async (req, res) => {
             })
         }
 
+        const errors = [];
+
+        if (password.length < 8)
+            errors.push("Password must be at least 8 characters.");
+
+        if (!/[A-Z]/.test(password))
+            errors.push("Password must contain an uppercase letter.");
+
+        if (!/[a-z]/.test(password))
+            errors.push("Password must contain a lowercase letter.");
+
+        if (!/\d/.test(password))
+            errors.push("Password must contain a number.");
+
+        if (!/[!@#$%^&*(),.?":{}|<>_\-]/.test(password))
+            errors.push("Password must contain a special character.");
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                errors
+            });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const [result] = await db.query("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)", [username, email, hashedPassword])
@@ -109,6 +145,98 @@ app.post('/api/register', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Registration failed" })
+    }
+})
+
+// Fetch user profile
+app.get('/api/profile', authenticateJsonToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const [rows] = await db.query("SELECT id, username, email FROM users WHERE id = ?", [userId]);
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.json({ user: rows[0] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch profile" });
+    }
+})
+
+// Update user profile
+app.patch('/api/profile', authenticateJsonToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { username, email, currentPassword, newPassword } = req.body;
+
+        const [userRows] = await db.query("SELECT password_hash FROM users WHERE id = ?", [userId]);
+        if (userRows.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const user = userRows[0];
+
+        if (username || email) {
+            const [existing] = await db.query(
+                "SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?",
+                [username || "", email || "", userId]
+            );
+            if (existing.length > 0) {
+                return res.status(409).json({ message: "Username or Email already exists" });
+            }
+        }
+
+        const updates = [];
+        const values = [];
+
+        if (username) {
+            updates.push("username = ?");
+            values.push(username);
+        }
+        if (email) {
+            updates.push("email = ?");
+            values.push(email);
+        }
+        if (newPassword) {
+            if (!currentPassword) {
+                return res.status(400).json({ message: "Current password is required to change password" });
+            }
+            const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+            if (!isMatch) {
+                return res.status(401).json({ message: "Current password is incorrect" });
+            }
+
+            const errors = [];
+            if (newPassword.length < 8)
+                errors.push("Password must be at least 8 characters.");
+            if (!/[A-Z]/.test(newPassword))
+                errors.push("Password must contain an uppercase letter.");
+            if (!/[a-z]/.test(newPassword))
+                errors.push("Password must contain a lowercase letter.");
+            if (!/\d/.test(newPassword))
+                errors.push("Password must contain a number.");
+            if (!/[!@#$%^&*(),.?\":{}|<>_\\-]/.test(newPassword))
+                errors.push("Password must contain a special character.");
+
+            if (errors.length > 0) {
+                return res.status(400).json({ errors });
+            }
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            updates.push("password_hash = ?");
+            values.push(hashedPassword);
+        }
+
+        if (updates.length === 0) {
+            return res.status(400).json({ message: "No updates provided" });
+        }
+
+        values.push(userId);
+        await db.query(`UPDATE users SET ${updates.join(", ")} WHERE id = ?`, values);
+
+        res.json({ message: "Profile updated successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Profile update failed" });
     }
 })
 
@@ -179,10 +307,13 @@ app.patch('/api/todo/update/:id', authenticateJsonToken, async (req, res) => {
 
         const updates = []
         const values = []
+        const allowedKeys = ['title', 'task', 'task_date', 'is_completed']
 
         for (const [key, value] of Object.entries(req.body)) {
-            updates.push(`${key} = ?`)
-            values.push(value)
+            if (allowedKeys.includes(key)) {
+                updates.push(`${key} = ?`)
+                values.push(value)
+            }
         }
 
         if (updates.length === 0) {
@@ -215,7 +346,7 @@ app.patch('/api/todo/update/:id', authenticateJsonToken, async (req, res) => {
 // delete data
 app.delete('/api/todo/delete/:id', authenticateJsonToken, async (req, res) => {
     const { id } = req.params
-    
+
     try {
         const userId = req.user.id
 
