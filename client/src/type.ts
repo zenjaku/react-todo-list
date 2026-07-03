@@ -70,6 +70,8 @@ export type CardProps = {
   details: string;
   datetime: Date;
   onClick: () => void;
+  isCompleted?: boolean;
+  isOverdue?: boolean;
 };
 
 export type CreatePageProps = {
