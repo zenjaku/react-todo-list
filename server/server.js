@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
 app.use(express.json())
 
-const port = 9000
+const port = 1000
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,

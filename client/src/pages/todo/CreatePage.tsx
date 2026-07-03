@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 import type { CreatePageProps, TodoData } from "../../type";
 import { TodoForm } from "../../components/TodoForm";
 import { useAuth } from "../../context/AuthContext";
 
-export function CreatePage({ onClose }: CreatePageProps) {
-  const navigate = useNavigate();
+export function CreatePage({ onClose, onCreated }: CreatePageProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -35,14 +34,14 @@ export function CreatePage({ onClose }: CreatePageProps) {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Saviing failed");
+        throw new Error(result.message || "Saving failed");
       }
 
       setSuccess("Saved Successfully!");
       console.log(result);
       setTimeout(() => {
         onClose();
-        navigate("/", { replace: true });
+        onCreated();
       }, 500);
     } catch (err: any) {
       console.error(err);

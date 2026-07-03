@@ -51,6 +51,7 @@ export type Todo = TodoData & {
 export type TodoFormProps = {
   onClose: () => void;
   onSubmit: (data: Omit<TodoData, "id" | "user_id">) => void;
+  initialData?: Omit<TodoData, "id" | "user_id">;
   formTitle?: string;
   error?: string | null;
   success?: string | null;
@@ -69,10 +70,13 @@ export type CardProps = {
   details: string;
   datetime: Date;
   onClick: () => void;
+  onUpdate: () => void;
+  onDelete: () => void;
 };
 
 export type CreatePageProps = {
   onClose: () => void;
+  onCreated: () => void;
 };
 
 export type NoticeProps = {
@@ -106,6 +110,7 @@ export type UpdatePageData = {
 };
 
 export type UpdatePageProps = {
+  todo: Todo;
   onClose: () => void;
   onUpdate: (data: Omit<UpdatePageData, "id" | "user_id">) => void;
 };

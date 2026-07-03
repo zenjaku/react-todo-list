@@ -148,6 +148,8 @@ a {
 
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
+    cursor: pointer;
+
     &:hover {
         box-shadow:
             0 6px 12px rgba(0, 0, 0, 0.10),
@@ -156,10 +158,20 @@ a {
 }
 
 .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     flex-shrink: 0;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid #d1d3d6;
     padding: 0.755rem;
+}
+
+.card-header .card-header-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
 }
 
 .card-header h3 {
@@ -316,9 +328,49 @@ a {
     }
 }
 
-/* .logout-btn {
+.update-btn {
+    width: 100%;
+    padding: .25rem;
+    border: none;
+    border-radius: 3px;
+    background: #002fff;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 
-} */
+    &:hover {
+        background: #0025cb;
+        color: #e0e0e0;
+    }
+
+    &::active {
+        transform: translateY(1px);
+    }
+}
+
+.delete-btn {
+    width: 100%;
+    padding: .25rem;
+    border: none;
+    border-radius: 3px;
+    background: #ff0000;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background: #da0000;
+        color: #e0e0e0;
+    }
+
+    &::active {
+        transform: translateY(1px);
+    }
+}
 
 .error-message {
     width: 100%;
