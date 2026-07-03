@@ -212,6 +212,31 @@ app.patch('/api/todo/update/:id', authenticateJsonToken, async (req, res) => {
 })
 
 
+// delete data
+app.delete('/api/todo/delete/:id', authenticateJsonToken, async (req, res) => {
+    const { id } = req.params
+    
+    try {
+        const userId = req.user.id
+
+        const [result] = await db.query(`DELETE FROM todos WHERE id = ? AND user_id = ?`, [id, userId])
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                message: "No records found"
+            })
+        }
+
+        res.status(201).json({
+            message: "Todo deleted successful",
+        })
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to update todo: ", id })
+    }
+})
+
 
 
 // console logs

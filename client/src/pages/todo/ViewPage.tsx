@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import type { ViewPageData, ViewPageProps } from "../../type";
+import type { ViewPageData, ViewPageProps, UpdatePageData } from "../../type";
 import { useAuth } from "../../context/AuthContext";
+import { UpdatePage } from "./UpdatePage";
 
-export function ViewPage({ todoId, onClose }: ViewPageProps) {
+export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
   const [todo, setTodo] = useState<ViewPageData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   const { token } = useAuth();
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -35,7 +38,7 @@ export function ViewPage({ todoId, onClose }: ViewPageProps) {
       .finally(() => {
         setLoading(false);
       });
-  }, [token, todoId, apiUrl]);
+  }, [token, todoId, apiUrl, refreshKey]);
 
   if (loading) {
     return (
@@ -81,6 +84,51 @@ export function ViewPage({ todoId, onClose }: ViewPageProps) {
     });
   };
 
+  const handleUpdate = async (data: Omit<UpdatePageData, "id" | "user_id">) => {
+    try {
+      const response = await fetch(`${apiUrl}/todo/update/${todoId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Update failed");
+      }
+
+      setRefreshKey((prev) => prev + 1);
+      onRefresh();
+      setIsUpdating(false);
+    } catch (err) {
+      console.error("Update failed: ", err);
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this task?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`${apiUrl}/todo/delete/${todoId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Delete failed");
+      }
+
+      onRefresh();
+      onClose();
+    } catch (err) {
+      console.error("Delete failed: ", err);
+    }
+  };
+
   return (
     <>
       <div className="modal-overlay" onClick={onClose}>
@@ -120,8 +168,21 @@ export function ViewPage({ todoId, onClose }: ViewPageProps) {
               <span className="view-modal-meta-value">{todo.updated_at ? formatDate(todo.updated_at) : "Never"}</span>
             </div>
           </div>
+
+          <div className="view-modal-actions">
+            <button className="update-btn" onClick={() => setIsUpdating(true)}>Update</button>
+            <button className="delete-btn" onClick={handleDelete}>Delete</button>
+          </div>
         </div>
       </div>
+
+      {isUpdating && (
+        <UpdatePage
+          todo={todo as any}
+          onClose={() => setIsUpdating(false)}
+          onUpdate={handleUpdate}
+        />
+      )}
     </>
   );
 }

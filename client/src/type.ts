@@ -70,8 +70,6 @@ export type CardProps = {
   details: string;
   datetime: Date;
   onClick: () => void;
-  onUpdate: () => void;
-  onDelete: () => void;
 };
 
 export type CreatePageProps = {
@@ -98,6 +96,7 @@ export type ViewPageData = {
 export type ViewPageProps = {
   onClose: () => void;
   todoId: number;
+  onRefresh: () => void;
 };
 
 export type UpdatePageData = {

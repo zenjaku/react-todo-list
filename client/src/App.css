@@ -668,7 +668,7 @@ a {
     border-radius: 3px;
     border: 1px solid #f3f4f6;
 
-    height: 300px;
+    height: 200px;
     overflow-y: auto;
     white-space: pre-wrap;
     word-break: break-word;
@@ -722,4 +722,19 @@ a {
     background-color: #fffbeb;
     color: #d97706;
     border: 1px solid #fde68a;
+}
+
+.view-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 1.75rem;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.25rem;
+}
+
+.view-modal-actions button {
+    width: auto;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.85rem;
 }
