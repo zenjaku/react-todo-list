@@ -8,7 +8,7 @@ export function AboutPage() {
         it turns digital task organization into a charming desk board.
       </p>
       <p>
-        The application is powered by React, TypeScript, Node.js, and SQLite, featuring a fully custom-tailored CSS styling 
+        The application is powered by React, TypeScript, Node.js, and MySQL, featuring a fully custom-tailored CSS styling 
         system to emulate real-life paper textures, stamps, pushpins, and hand-drawn designs.
       </p>
 
