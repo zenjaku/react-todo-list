@@ -13,7 +13,6 @@ export function TodoList({ refreshTrigger }: { refreshTrigger?: number }) {
   const [selectedTodo, setSelectedTodo] = useState<number | null>(null);
   const [deletingTodoId, setDeletingTodoId] = useState<number | null>(null);
   const [filter, setFilter] = useState<FilterType>("all");
-  const [quickTitle, setQuickTitle] = useState("");
   const { token } = useAuth();
   const apiUrl = import.meta.env.VITE_API_URL;
 
