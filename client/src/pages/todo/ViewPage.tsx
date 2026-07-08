@@ -3,6 +3,7 @@ import type { ViewPageData, ViewPageProps, UpdatePageData } from "../../type";
 import { useAuth } from "../../context/AuthContext";
 import { UpdatePage } from "./UpdatePage";
 import { ConfirmModal } from "../../components/ConfirmModal";
+import { parseChecklist } from "../../utils/todoHelpers";
 
 export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
   const [todo, setTodo] = useState<ViewPageData | null>(null);
@@ -86,6 +87,8 @@ export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
     });
   };
 
+  const checklist = todo ? parseChecklist(todo.task) : null;
+
   const handleUpdate = async (data: Omit<UpdatePageData, "id" | "user_id">) => {
     try {
       const response = await fetch(`${apiUrl}/todo/update/${todoId}`, {
@@ -141,7 +144,25 @@ export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
 
           <div className="view-modal-body">
             <div className="view-modal-task-title">Task Description</div>
-            <div className="view-modal-task-desc">{todo.task}</div>
+            <div className="view-modal-task-desc">
+              {/* {todo.task} */}
+              {checklist ? (
+                <div className="todo-subtasks-list" style={{ marginTop: "8px" }}>
+                  {checklist.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`todo-subtask-row ${item.done ? "sub-done" : ""}`}
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <input type="checkbox" className="todo-sub-checkbox" checked={item.done} readOnly />
+                      <span className="todo-subtask-text">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                todo.task
+              )}
+            </div>
           </div>
 
           <div className="view-modal-meta">
@@ -169,19 +190,17 @@ export function ViewPage({ todoId, onClose, onRefresh }: ViewPageProps) {
           </div>
 
           <div className="view-modal-actions">
-            <button className="update-btn" onClick={() => setIsUpdating(true)}>Update</button>
-            <button className="delete-btn" onClick={() => setShowDeleteConfirm(true)}>Delete</button>
+            <button className="update-btn" onClick={() => setIsUpdating(true)}>
+              Update
+            </button>
+            <button className="delete-btn" onClick={() => setShowDeleteConfirm(true)}>
+              Delete
+            </button>
           </div>
         </div>
       </div>
 
-      {isUpdating && (
-        <UpdatePage
-          todo={todo as any}
-          onClose={() => setIsUpdating(false)}
-          onUpdate={handleUpdate}
-        />
-      )}
+      {isUpdating && <UpdatePage todo={todo as any} onClose={() => setIsUpdating(false)} onUpdate={handleUpdate} />}
 
       <ConfirmModal
         isOpen={showDeleteConfirm}
