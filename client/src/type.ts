@@ -58,6 +58,12 @@ export type TodoFormProps = {
   success?: string | null;
 };
 
+export type ChecklistItem = {
+  id: string;
+  text: string;
+  done: boolean;
+};
+
 // ========================================
 // Components
 // ========================================
@@ -67,12 +73,16 @@ export type FloatingButtonProps = {
 };
 
 export type CardProps = {
+  id: number;
   title: string;
-  details: string;
+  task: string; // Stored as a JSON-serialized string of ChecklistItem[] or plain text
   datetime: Date;
-  onClick: () => void;
-  isCompleted?: boolean;
-  isOverdue?: boolean;
+  isCompleted: boolean;
+  isOverdue: boolean;
+  onRowClick: () => void;
+  onToggleComplete: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onUpdateTaskField: (updatedTaskJson: string) => Promise<void>;
+  onDeleteClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 export type CreatePageProps = {

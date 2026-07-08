@@ -957,44 +957,46 @@ body::-webkit-scrollbar-thumb:hover {
    ======================================== */
 .completed-stamp {
     position: absolute;
-    bottom: 25px;
-    right: 25px;
+    top: 50%;
+    right: 80px;
     border: 3px double #15803d; /* Green ink */
     color: #15803d;
     font-family: 'Courier Prime', monospace;
     font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
-    padding: 0.25rem 0.6rem;
+    padding: 0.15rem 0.5rem;
     border-radius: 4px;
-    transform: rotate(-10deg);
+    transform: translateY(-50%) rotate(-10deg);
     opacity: 0.75;
     pointer-events: none;
     user-select: none;
-    background-color: rgba(255, 250, 224, 0.4);
+    background-color: rgba(255, 250, 224, 0.6);
     box-shadow: 0 0 2px rgba(21,128,61,0.1);
     letter-spacing: 2px;
+    z-index: 5;
 }
 
 .overdue-stamp {
     position: absolute;
-    bottom: 25px;
-    right: 25px;
+    top: 50%;
+    right: 80px;
     border: 3px double #b91c1c; /* Deep red ink */
     color: #b91c1c;
     font-family: 'Courier Prime', monospace;
     font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
-    padding: 0.25rem 0.6rem;
+    padding: 0.15rem 0.5rem;
     border-radius: 4px;
-    transform: rotate(10deg);
+    transform: translateY(-50%) rotate(10deg);
     opacity: 0.75;
     pointer-events: none;
     user-select: none;
-    background-color: rgba(255, 250, 224, 0.4);
+    background-color: rgba(255, 250, 224, 0.6);
     box-shadow: 0 0 2px rgba(185,28,28,0.1);
     letter-spacing: 2px;
+    z-index: 5;
 }
 
 /* ========================================
@@ -1090,4 +1092,422 @@ body::-webkit-scrollbar-thumb:hover {
 
 .creator-info-table td:last-child {
     color: #1a2f42;
+}
+
+/* ========================================
+   Checklist Lined Notebook Styling
+   ======================================== */
+.todo-notebook {
+    background: #fffdf0;
+    border: 2px solid #8a817c;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 
+        0 4px 6px rgba(0,0,0,0.03),
+        0 10px 25px rgba(0,0,0,0.05),
+        -3px 4px 0px #fffdf0,
+        -6px 8px 0px #ebdec3,
+        -7px 8px 5px rgba(0,0,0,0.08);
+}
+
+.todo-list-rows {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+    background-image: linear-gradient(90deg, transparent 44px, #ffb3b3 44px, #ffb3b3 46px, transparent 46px);
+    background-size: 100% 100%;
+}
+
+.todo-row-card {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem 1rem 1rem 0.5rem;
+    border-bottom: 1px dashed #d6cfb8;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    gap: 15px;
+    position: relative;
+}
+
+.todo-row-card:hover {
+    background-color: rgba(219, 208, 186, 0.15);
+    transform: translateX(4px);
+}
+
+.todo-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.todo-checkbox {
+    width: 22px;
+    height: 22px;
+    accent-color: #a90000;
+}
+
+.todo-body-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.todo-header-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #463f3a;
+}
+
+.completed .todo-title {
+    text-decoration: line-through;
+    color: #8a817c;
+}
+
+.todo-details-desc {
+    font-size: 1rem;
+    color: #5e503f;
+}
+
+/* Progress bar styling */
+.todo-progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #8a817c;
+    background: #f3edd8;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 16px;
+    width: 200px;
+    position: relative;
+}
+
+.todo-progress-bar {
+    height: 100%;
+    background-color: #8cb89f;
+    transition: width 0.3s ease;
+}
+
+.todo-progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #463f3a;
+}
+
+/* Subtasks inside cards */
+.todo-subtasks-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.todo-subtasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.todo-subtask-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    color: #463f3a;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.todo-subtask-row:hover {
+    background: rgba(140, 184, 159, 0.15);
+}
+
+.todo-sub-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #8cb89f;
+}
+
+.sub-done .todo-subtask-text {
+    text-decoration: line-through;
+    color: #8a817c;
+    opacity: 0.8;
+}
+
+/* Mode Selection buttons */
+.form-mode-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.mode-btn {
+    flex: 1;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9rem;
+    background: #e6dfcc;
+    border: 1px solid #8a817c;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.mode-btn.active {
+    background: #dbd0ba;
+    font-weight: bold;
+    border-color: #a90000;
+}
+
+/* Sub-items Form Editor styling */
+.checklist-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(219, 208, 186, 0.1);
+    padding: 10px;
+    border: 1px dashed #8a817c;
+    border-radius: 6px;
+}
+
+.checklist-builder-input {
+    display: flex;
+    gap: 8px;
+}
+
+.add-subitem-btn {
+    background: #8cb89f;
+    border: 1px solid #749e86;
+    color: #fff;
+    padding: 0 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Courier Prime', monospace;
+}
+
+.form-checklist-items {
+    max-height: 150px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-checklist-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fbf9f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.checklist-item-text {
+    flex-grow: 1;
+    font-size: 1rem;
+}
+
+.delete-subitem-btn {
+    background: transparent;
+    border: none;
+    color: #a90000;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* ========================================
+   Quick Add & Filter Tabs Styling
+   ======================================== */
+.quick-add-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    background: rgba(219, 208, 186, 0.1);
+    padding: 12px;
+    border: 1px dashed #8a817c;
+    border-radius: 6px;
+}
+
+.quick-add-input {
+    flex-grow: 1;
+    font-family: 'Patrick Hand', 'Kalam', cursive;
+    font-size: 1.15rem;
+    padding: 8px 12px;
+    border: 1px solid #c8c2bc;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #463f3a;
+}
+
+.quick-add-input:focus {
+    outline: none;
+    border-color: #a90000;
+    box-shadow: 0 0 4px rgba(169, 0, 0, 0.15);
+}
+
+.quick-add-btn {
+    font-family: 'Courier Prime', monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ffffff;
+    background: #a90000;
+    border: 1px solid #8f0000;
+    padding: 0 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.quick-add-btn:hover {
+    background: #8f0000;
+}
+
+.todo-filter-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 2px solid #8a817c;
+    padding-bottom: 6px;
+    margin-bottom: 1rem;
+}
+
+.filter-tab {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #5e503f;
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+}
+
+.filter-tab:hover {
+    background: rgba(219, 208, 186, 0.3);
+    color: #2b2b2b;
+}
+
+.filter-tab.active {
+    background: #a90000;
+    color: #ffffff;
+}
+
+/* ========================================
+   Card Meta Actions & Badge Styling
+   ======================================== */
+.todo-meta-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.overdue-badge {
+    background-color: #ffe5e5;
+    color: #b91c1c;
+    border: 1px solid #ffa3a3;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.todo-date {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem;
+    color: #8a817c;
+    font-weight: 700;
+}
+
+.todo-row-delete-btn {
+    background: transparent;
+    border: none;
+    color: #a90000;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.todo-row-delete-btn:hover {
+    background-color: rgba(169, 0, 0, 0.1);
+    color: #8f0000;
+}
+
+/* ========================================
+   Slanted Warning Confirm Modal Styling
+   ======================================== */
+.confirm-modal {
+    background-color: #fff5f5; /* Light pink warning paper */
+    background-image: linear-gradient(#ffe3e3 1px, transparent 1px);
+    background-size: 100% 1.6rem;
+    background-position: 0 0.8rem;
+    line-height: 1.6rem;
+    border: 2px solid #a90000;
+    border-radius: 4px;
+    width: calc(100% - 2rem);
+    max-width: 400px;
+    position: relative;
+    padding: 2.8rem 1.5rem 1.5rem 2rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transform: rotate(-1.6deg); /* slanted warning card effect */
+    animation: modalSlideUp 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.confirm-modal-header-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: #a90000;
+    border-radius: 4px 4px 0 0;
+}
+
+.confirm-modal h2 {
+    font-family: 'Patrick Hand', 'Kalam', cursive;
+    color: #a90000;
+    border-bottom: 2px solid #ffa3a3;
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.45rem;
+    margin-top: 0;
+}
+
+.confirm-modal-message {
+    font-family: 'Patrick Hand', 'Kalam', cursive;
+    font-size: 1.1rem;
+    color: #3b3a36;
+    margin-bottom: 1.5rem;
+}
+
+.todo-form-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.755rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.755rem;
 }
